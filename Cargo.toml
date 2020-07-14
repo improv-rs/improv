@@ -1,0 +1,37 @@
+[package]
+name          = "improv"
+version       = "1.0.0-beta.1"
+authors       = ["Richard Berry <rjsberry@pm.me>"]
+license       = "Unlicense/0BSD"
+description   = "Actor microframework"
+documentation = "https://docs.rs/improv"
+homepage      = "https://github.com/improv-rs/improv"
+repository    = "https://github.com/improv-rs/improv"
+readme        = "README.md"
+categories    = ["asynchronous", "network-programming"]
+keywords      = ["actor", "actors", "async", "futures", "tokio"]
+edition       = "2018"
+
+[features]
+default   = []
+test-util = []
+
+[dependencies.async-trait]
+version = "0.1"
+
+[dependencies.pin-project-lite]
+version = "0.1"
+
+[dependencies.tokio]
+version          = "0.2.21"
+default-features = false
+features         = ["rt-core", "stream", "sync", "time"]
+
+[dev-dependencies.tokio]
+version          = "0.2.21"
+default-features = false
+features         = ["blocking", "macros", "rt-threaded", "stream", "sync", "test-util", "time"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
