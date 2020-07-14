@@ -8,7 +8,7 @@ mod prelude;
 mod macros;
 
 mod actor;
-mod address;
+mod addr;
 mod ask;
 mod ask_envelope;
 mod asker;
@@ -41,7 +41,7 @@ use tell::Tell;
 use tell_envelope::TellEnvelope;
 
 pub use actor::Actor;
-pub use address::Address;
+pub use addr::Addr;
 pub use asker::Asker;
 pub use context::Context;
 pub use disconnected::Disconnected;

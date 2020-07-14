@@ -33,5 +33,7 @@ impl<A: Actor> Cell<A> {
             yielder.yield_with(envelope.handle(&mut actor, &mut cx)).await;
             return_if!(!cx.keep_running);
         }
+
+        actor.stopped(&mut cx);
     }
 }

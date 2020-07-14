@@ -6,11 +6,11 @@ pub struct Asker<M: Message> {
 
 impl<M: Message> Asker<M> {
     #[inline]
-    pub(super) fn new<A: Actor>(address: Address<A>) -> Self
+    pub(super) fn new<A: Actor>(addr: Addr<A>) -> Self
     where
         A: Receive<M>,
     {
-        Self { inner: Box::new(address) }
+        Self { inner: Box::new(addr) }
     }
 }
 
