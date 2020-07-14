@@ -1,21 +1,21 @@
 use super::prelude::*;
 
 pub struct Probe<A: Actor> {
-    inbox:   mpsc::UnboundedReceiver<Box<dyn Envelope<Actor = A>>>,
-    address: Address<A>,
+    inbox: mpsc::UnboundedReceiver<Box<dyn Envelope<Actor = A>>>,
+    addr:  Addr<A>,
 }
 
 impl<A: Actor> Default for Probe<A> {
     fn default() -> Self {
         let (tx, rx) = mpsc::unbounded_channel();
-        Self { inbox: rx, address: Address::new(tx) }
+        Self { inbox: rx, addr: Addr::new(tx) }
     }
 }
 
 impl<A: Actor> Probe<A> {
     pub fn new() -> Self { Self::default() }
 
-    pub fn address(&self) -> Address<A> { self.address.clone() }
+    pub fn addr(&self) -> Addr<A> { self.addr.clone() }
 
     pub async fn receive<M: Message>(&mut self) -> M
     where

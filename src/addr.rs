@@ -1,10 +1,10 @@
 use super::prelude::*;
 
-pub struct Address<A: Actor> {
+pub struct Addr<A: Actor> {
     inner: Arc<mpsc::UnboundedSender<Box<dyn Envelope<Actor = A>>>>,
 }
 
-impl<A: Actor> Address<A> {
+impl<A: Actor> Addr<A> {
     #[inline]
     pub(super) fn new(
         tx: mpsc::UnboundedSender<Box<dyn Envelope<Actor = A>>>,
@@ -13,7 +13,7 @@ impl<A: Actor> Address<A> {
     }
 }
 
-impl<A: Actor> Address<A> {
+impl<A: Actor> Addr<A> {
     pub fn tell<M: Message<Response = ()>>(
         &self,
         msg: M,
@@ -58,14 +58,14 @@ impl<A: Actor> Address<A> {
     }
 }
 
-impl<A: Actor, M: Message<Response = ()>> Tell<M> for Address<A>
+impl<A: Actor, M: Message<Response = ()>> Tell<M> for Addr<A>
 where
     A: Receive<M>,
 {
     fn tell(&self, msg: M) -> Result<(), Disconnected> { self.tell(msg) }
 }
 
-impl<A: Actor, M: Message> Ask<M> for Address<A>
+impl<A: Actor, M: Message> Ask<M> for Addr<A>
 where
     A: Receive<M>,
 {
@@ -78,12 +78,12 @@ where
     }
 }
 
-impl<A: Actor> fmt::Debug for Address<A> {
+impl<A: Actor> fmt::Debug for Addr<A> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Address({:p})", self.inner)
     }
 }
 
-impl<A: Actor> Clone for Address<A> {
+impl<A: Actor> Clone for Addr<A> {
     fn clone(&self) -> Self { Self { inner: Arc::clone(&self.inner) } }
 }

@@ -1,7 +1,5 @@
 use improv::*;
 
-use std::panic;
-
 #[tokio::test]
 async fn ask() {
     #[derive(Default)]
@@ -24,12 +22,12 @@ async fn ask() {
         type Response = usize;
     }
 
-    let address = improv::spawn(|_| A::default());
+    let addr = improv::spawn(|_| A::default());
 
-    assert_eq!(address.ask(M).await, Ok(1));
-    assert_eq!(address.ask(M).await, Ok(2));
-    assert_eq!(address.ask(M).await, Ok(3));
-    assert!(address.ask(M).await.is_err());
+    assert_eq!(addr.ask(M).await, Ok(1));
+    assert_eq!(addr.ask(M).await, Ok(2));
+    assert_eq!(addr.ask(M).await, Ok(3));
+    assert!(addr.ask(M).await.is_err());
 }
 
 #[cfg(feature = "test-util")]
@@ -43,8 +41,8 @@ async fn probe_ok() {
     where
         T: Receive<Noop>,
     {
-        async fn receive(&mut self, M(address): M<T>, _: &mut Context<Self>) {
-            let _ = address.tell(Noop);
+        async fn receive(&mut self, M(addr): M<T>, _: &mut Context<Self>) {
+            let _ = addr.tell(Noop);
         }
     }
 
@@ -56,7 +54,7 @@ async fn probe_ok() {
         async fn receive(&mut self, _: Noop, _: &mut Context<Self>) {}
     }
 
-    struct M<T: Actor>(Address<T>);
+    struct M<T: Actor>(Addr<T>);
     impl<T: Actor> Message for M<T> {
         type Response = ();
     }
@@ -66,10 +64,10 @@ async fn probe_ok() {
         type Response = ();
     }
 
-    let address = improv::spawn(|_| A);
+    let addr = improv::spawn(|_| A);
 
     let mut probe = Probe::<B>::new();
-    assert!(address.tell(M(probe.address())).is_ok());
+    assert!(addr.tell(M(probe.addr())).is_ok());
     probe.receive::<Noop>().await;
 }
 
@@ -85,8 +83,8 @@ async fn probe_err() {
     where
         T: Receive<Noop>,
     {
-        async fn receive(&mut self, M(address): M<T>, _: &mut Context<Self>) {
-            let _ = address.tell(Noop);
+        async fn receive(&mut self, M(addr): M<T>, _: &mut Context<Self>) {
+            let _ = addr.tell(Noop);
         }
     }
 
@@ -103,7 +101,7 @@ async fn probe_err() {
         async fn receive(&mut self, _: UhOh, _: &mut Context<Self>) {}
     }
 
-    struct M<T: Actor>(Address<T>);
+    struct M<T: Actor>(Addr<T>);
     impl<T: Actor> Message for M<T> {
         type Response = ();
     }
@@ -118,9 +116,9 @@ async fn probe_err() {
         type Response = ();
     }
 
-    let address = improv::spawn(|_| A);
+    let addr = improv::spawn(|_| A);
 
     let mut probe = Probe::<B>::new();
-    assert!(address.tell(M(probe.address())).is_ok());
+    assert!(addr.tell(M(probe.addr())).is_ok());
     probe.receive::<UhOh>().await;
 }

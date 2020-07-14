@@ -25,12 +25,16 @@ version = "0.1"
 [dependencies.tokio]
 version          = "0.2.21"
 default-features = false
-features         = ["rt-core", "stream", "sync", "time"]
+features         = [
+    "rt-core", "stream", "sync", "time"
+]
 
 [dev-dependencies.tokio]
 version          = "0.2.21"
 default-features = false
-features         = ["blocking", "macros", "rt-threaded", "stream", "sync", "test-util", "time"]
+features         = [
+    "macros", "rt-core", "stream", "sync", "test-util", "time"
+]
 
 [package.metadata.docs.rs]
 all-features = true
